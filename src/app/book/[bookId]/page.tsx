@@ -13,8 +13,22 @@ const SingleBook = async ({
   let book: Book | null = null;
   try {
     const response = await fetch(
-      `${process.env.BACKEND_URL}/books/${params.bookId}`
+      `${process.env.BACKEND_URL}/books/${params.bookId}`,
+      {
+        next: {
+          revalidate: 3600,
+        },
+      }
     );
+
+    // const response = await fetch(
+    //   `${process.env.BACKEND_URL}/books/${params.bookId}`,
+    //   {
+    //     cache: "no-store",
+    //   }
+    // );
+
+    // if we state cache then it will call the api everytime we refresh the page if not then it will call the api only once and store the data in cache and use old data
     if (!response.ok) {
       throw new Error("Failed to fetch book");
     }
